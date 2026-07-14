@@ -1,0 +1,176 @@
+#!/usr/bin/env python3
+"""FarmNerds-Hola — the FarmNerdOS welcome app (a cachyos-hello homage).
+
+Quick actions for new users: update the system, install popular apps,
+launch the installer (live session), and project links.
+"""
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QIcon, QPixmap
+from PyQt6.QtWidgets import (
+    QApplication, QCheckBox, QDialog, QGridLayout, QHBoxLayout, QLabel,
+    QMainWindow, QMessageBox, QPushButton, QVBoxLayout, QWidget,
+)
+
+# Seedling palette
+BG, SURFACE, ACCENT, GLOW, AMBER, TEXT = (
+    "#0C120C", "#141C14", "#5CDB3C", "#8AFF3A", "#F0A32E", "#DCE8D8")
+
+CONF = Path.home() / ".config" / "farmnerds-hola.conf"
+ICON = "/usr/share/pixmaps/farmnerds-hola.png"
+LIVE_INSTALLER = "/usr/local/bin/farmnerdos-install"
+
+APPS = [  # label, packages
+    ("LibreOffice (documents & spreadsheets)", "libreoffice-fresh"),
+    ("Firefox is preinstalled — Thunderbird mail", "thunderbird"),
+    ("GIMP (image editing)", "gimp"),
+    ("VLC (media player)", "vlc"),
+    ("QGIS (mapping — field boundaries, yield maps)", "qgis"),
+    ("btop (system monitor)", "btop"),
+]
+
+STYLE = f"""
+QMainWindow, QDialog {{ background: {BG}; }}
+QLabel {{ color: {TEXT}; }}
+QLabel#title {{ color: {GLOW}; font-size: 22px; font-weight: bold; }}
+QLabel#subtitle {{ color: {TEXT}; font-size: 13px; }}
+QPushButton {{
+    background: {SURFACE}; color: {TEXT}; border: 1px solid {ACCENT};
+    border-radius: 6px; padding: 12px 18px; font-size: 14px; text-align: left;
+}}
+QPushButton:hover {{ background: #1C281C; border-color: {GLOW}; color: {GLOW}; }}
+QPushButton#install {{ border-color: {AMBER}; }}
+QCheckBox {{ color: {TEXT}; font-size: 13px; }}
+QCheckBox::indicator {{ width: 16px; height: 16px; }}
+"""
+
+
+def startup_disabled() -> bool:
+    return CONF.exists() and "show=false" in CONF.read_text()
+
+
+def set_startup(enabled: bool) -> None:
+    CONF.parent.mkdir(parents=True, exist_ok=True)
+    CONF.write_text(f"show={'true' if enabled else 'false'}\n")
+
+
+def in_terminal(cmd: str) -> None:
+    """Run a command visibly in Konsole so users see what happens."""
+    wrapped = f"{cmd}; echo; read -rp '--- done, press Enter to close ---'"
+    subprocess.Popen(["konsole", "-e", "bash", "-c", wrapped])
+
+
+class AppPicker(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Install popular apps")
+        self.setStyleSheet(STYLE)
+        lay = QVBoxLayout(self)
+        lay.addWidget(QLabel("Pick what to plant — installed with pacman:"))
+        self.boxes = []
+        for label, pkg in APPS:
+            box = QCheckBox(label)
+            box.pkg = pkg
+            self.boxes.append(box)
+            lay.addWidget(box)
+        go = QPushButton("Install selected")
+        go.clicked.connect(self.install)
+        lay.addWidget(go)
+
+    def install(self):
+        pkgs = " ".join(b.pkg for b in self.boxes if b.isChecked())
+        if pkgs:
+            in_terminal(f"sudo pacman -S --needed --noconfirm {pkgs}")
+        self.accept()
+
+
+class Hola(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("FarmNerds-Hola")
+        self.setStyleSheet(STYLE)
+        self.setWindowIcon(QIcon(ICON))
+        root = QWidget()
+        self.setCentralWidget(root)
+        lay = QVBoxLayout(root)
+        lay.setContentsMargins(28, 24, 28, 16)
+
+        head = QHBoxLayout()
+        logo = QLabel()
+        pix = QPixmap(ICON)
+        if not pix.isNull():
+            logo.setPixmap(pix.scaled(72, 72,
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation))
+        head.addWidget(logo)
+        titles = QVBoxLayout()
+        t = QLabel("¡Hola, FarmNerd!")
+        t.setObjectName("title")
+        s = QLabel("FarmNerdOS 0.1 “Seedling” — grow smart. farm nerdy.")
+        s.setObjectName("subtitle")
+        titles.addWidget(t)
+        titles.addWidget(s)
+        head.addLayout(titles)
+        head.addStretch()
+        lay.addLayout(head)
+        lay.addSpacing(12)
+
+        grid = QGridLayout()
+        grid.setSpacing(10)
+        buttons = [
+            ("⟳  Update system", lambda: in_terminal("sudo pacman -Syu")),
+            ("⊞  Install popular apps", self.pick_apps),
+            ("⌂  FarmNerdOS on GitHub",
+             lambda: subprocess.Popen(["xdg-open", "https://github.com/farmnerds-net/farmnerdos"])),
+            ("⚑  Report a bug",
+             lambda: subprocess.Popen(
+                 ["xdg-open", "https://github.com/farmnerds-net/farmnerdos/issues"])),
+        ]
+        if os.path.exists(LIVE_INSTALLER):
+            b = QPushButton("⛏  Install FarmNerdOS to disk")
+            b.setObjectName("install")
+            b.clicked.connect(lambda: subprocess.Popen([LIVE_INSTALLER]))
+            grid.addWidget(b, 0, 0, 1, 2)
+        for i, (label, fn) in enumerate(buttons):
+            b = QPushButton(label)
+            b.clicked.connect(fn)
+            grid.addWidget(b, 1 + i // 2, i % 2)
+        lay.addLayout(grid)
+        lay.addStretch()
+
+        foot = QHBoxLayout()
+        self.autostart = QCheckBox("Show FarmNerds-Hola at startup")
+        self.autostart.setChecked(not startup_disabled())
+        self.autostart.toggled.connect(set_startup)
+        foot.addWidget(self.autostart)
+        foot.addStretch()
+        about = QPushButton("About")
+        about.setFlat(True)
+        about.clicked.connect(lambda: QMessageBox.about(
+            self, "FarmNerds-Hola",
+            "FarmNerds-Hola 0.1\nThe FarmNerdOS welcome app.\n"
+            "Kernel: linux-cachyos • Desktop: KDE Plasma\n"
+            "An homage to cachyos-hello. ¡Gracias, CachyOS!"))
+        foot.addWidget(about)
+        lay.addLayout(foot)
+        self.resize(720, 460)
+
+    def pick_apps(self):
+        AppPicker(self).exec()
+
+
+def main() -> int:
+    if "--autostart" in sys.argv and startup_disabled():
+        return 0
+    app = QApplication(sys.argv)
+    win = Hola()
+    win.show()
+    return app.exec()
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=FarmNerds-Hola
+GenericName=Welcome App
+Comment=Update the system, install apps, and get growing
+Exec=farmnerds-hola
+Icon=farmnerds-hola
+Terminal=false
+Categories=System;Settings;
+Keywords=welcome;hello;update;install;

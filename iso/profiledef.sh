@@ -4,7 +4,7 @@
 
 iso_name="farmnerdos"
 iso_label="FARMNERDOS_$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y%m)"
-iso_publisher="FarmNerdOS <https://github.com/farmnerdos>"
+iso_publisher="FarmNerdOS <https://github.com/farmnerds-net/farmnerdos>"
 iso_application="FarmNerdOS Seedling Live/Installer"
 iso_version="0.1-seedling"
 install_dir="arch"          # keep default so mkinitcpio-archiso hooks Just Work

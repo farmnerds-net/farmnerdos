@@ -1,0 +1,19 @@
+# build outputs
+/out/
+/work/
+/repo/x86_64/
+*.iso
+*.pkg.tar.zst
+*.pkg.tar.zst.sig
+*.log
+
+# archiso work dirs
+/iso/work/
+
+# editor noise
+.DS_Store
+Thumbs.db
+
+# python
+__pycache__/
+*.pyc

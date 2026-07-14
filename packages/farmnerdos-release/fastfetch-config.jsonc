@@ -1,0 +1,37 @@
+// FarmNerdOS system-wide fastfetch config — circuit-tree logo + full info.
+// "file" type (not file-raw): fastfetch measures width correctly for the
+// side-by-side layout and colors the $1 placeholders itself.
+// Users override with ~/.config/fastfetch/config.jsonc as usual.
+{
+    "logo": {
+        "type": "file",
+        "source": "/usr/share/farmnerdos/logo.txt",
+        "color": { "1": "92" },
+        "padding": { "left": 1, "right": 8, "top": 1 }
+    },
+    "modules": [
+        "title",
+        "separator",
+        "os",
+        "host",
+        "kernel",
+        "uptime",
+        "packages",
+        "shell",
+        "display",
+        "de",
+        "wm",
+        "theme",
+        "icons",
+        "terminal",
+        "terminalfont",
+        "cpu",
+        "gpu",
+        "memory",
+        "swap",
+        "disk",
+        "localip",
+        "break",
+        "colors"
+    ]
+}

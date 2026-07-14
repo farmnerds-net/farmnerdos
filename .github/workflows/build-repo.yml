@@ -1,0 +1,35 @@
+name: Build package repo
+
+on:
+  push:
+    branches: [main]
+    paths: ['packages/**']
+  workflow_dispatch:
+
+jobs:
+  build-repo:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:base-devel
+      options: --user root
+    steps:
+      - name: Prepare build user (makepkg refuses root)
+        run: |
+          pacman -Syu --noconfirm git
+          useradd -m builder
+          echo 'builder ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/builder
+
+      - uses: actions/checkout@v4
+
+      - name: Build packages + repo database
+        run: |
+          chown -R builder:builder .
+          su builder -c ./scripts/build-packages.sh
+
+      - name: Publish repo to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./repo
+          destination_dir: .
+          # served at https://farmnerds-net.github.io/farmnerdos/x86_64/farmnerdos.db

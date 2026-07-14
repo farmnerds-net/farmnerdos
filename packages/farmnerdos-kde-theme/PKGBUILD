@@ -3,18 +3,20 @@
 # lnf-* files are the look-and-feel package's metadata.json and defaults.
 pkgname=farmnerdos-kde-theme
 pkgver=0.1
-pkgrel=3
+pkgrel=4
 pkgdesc="FarmNerdOS KDE Plasma theme — dark soil with circuit-green accents"
 arch=('any')
-url="https://github.com/farmnerdos"
+url="https://github.com/farmnerds-net/farmnerdos"
 license=('CC-BY-SA-4.0')
 depends=('plasma-desktop' 'breeze' 'farmnerdos-wallpapers')
 source=('FarmNerdSeedling.colors'
         'FarmNerd.colorscheme'
         'FarmNerd.profile'
         'lnf-metadata.json'
-        'lnf-defaults')
-sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+        'lnf-defaults'
+        'lnf-layout.js'
+        'farmnerdos.png')
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
 
 package() {
     # Plasma color scheme
@@ -31,4 +33,11 @@ package() {
     local lnf="$pkgdir/usr/share/plasma/look-and-feel/org.farmnerdos.seedling"
     install -Dm644 lnf-metadata.json "$lnf/metadata.json"
     install -Dm644 lnf-defaults      "$lnf/contents/defaults"
+    # default panel layout (sets the Kickoff launcher icon to 'farmnerdos')
+    install -Dm644 lnf-layout.js \
+        "$lnf/contents/layouts/org.kde.plasma.desktop-layout.js"
+
+    # distro logo as a themed icon — used by Kickoff, About dialogs, os-release
+    install -Dm644 farmnerdos.png \
+        "$pkgdir/usr/share/icons/hicolor/256x256/apps/farmnerdos.png"
 }

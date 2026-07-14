@@ -19,9 +19,9 @@ strings:
     versionedName:       "FarmNerdOS 0.1 Seedling"
     shortVersionedName:  "FarmNerdOS 0.1"
     bootloaderEntryName: "FarmNerdOS"
-    productUrl:          "https://github.com/farmnerdos"
-    supportUrl:          "https://github.com/farmnerdos/farmnerdos/issues"
-    releaseNotesUrl:     "https://github.com/farmnerdos"
+    productUrl:          "https://github.com/farmnerds-net/farmnerdos"
+    supportUrl:          "https://github.com/farmnerds-net/farmnerdos/issues"
+    releaseNotesUrl:     "https://github.com/farmnerds-net/farmnerdos"
 
 images:
     productLogo:         "logo.png"

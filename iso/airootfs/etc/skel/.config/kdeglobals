@@ -1,0 +1,10 @@
+[KDE]
+LookAndFeelPackage=org.farmnerdos.seedling
+
+[General]
+ColorScheme=FarmNerdSeedling
+AccentColor=92,219,60
+TerminalApplication=konsole
+
+[Icons]
+Theme=breeze-dark

@@ -1,0 +1,6 @@
+# FarmNerdOS Konsole greeting shell rc.
+# Loads the user's own bashrc first, then shows the branded fetch.
+[[ -f ~/.bashrc ]] && source ~/.bashrc
+if [[ $- == *i* ]] && command -v fastfetch >/dev/null; then
+    fastfetch
+fi

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=FarmNerds-Hola
+Comment=FarmNerdOS welcome app (first-login greeter)
+Exec=farmnerds-hola --autostart
+Icon=farmnerds-hola
+Terminal=false
+X-KDE-autostart-after=panel

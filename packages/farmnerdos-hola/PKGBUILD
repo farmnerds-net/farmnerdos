@@ -1,0 +1,27 @@
+# Maintainer: FarmNerdOS Team
+pkgname=farmnerdos-hola
+pkgver=0.1
+pkgrel=2
+pkgdesc="FarmNerds-Hola — the FarmNerdOS welcome app (cachyos-hello homage)"
+arch=('any')
+url="https://github.com/farmnerds-net/farmnerdos"
+license=('MIT')
+# qt6-wayland is REQUIRED: python-pyqt6 doesn't pull the Wayland platform
+# plugin, and without it Qt apps crash silently on Plasma Wayland sessions
+depends=('python-pyqt6' 'qt6-wayland' 'konsole' 'xdg-utils')
+source=('farmnerds-hola'
+        'farmnerds-hola.desktop'
+        'farmnerds-hola-autostart.desktop'
+        'farmnerds-hola.png')
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP')
+
+package() {
+    install -Dm755 farmnerds-hola "$pkgdir/usr/bin/farmnerds-hola"
+    install -Dm644 farmnerds-hola.desktop \
+        "$pkgdir/usr/share/applications/farmnerds-hola.desktop"
+    # autostart for every user (live + installed); users opt out in-app
+    install -Dm644 farmnerds-hola-autostart.desktop \
+        "$pkgdir/etc/xdg/autostart/farmnerds-hola.desktop"
+    install -Dm644 farmnerds-hola.png \
+        "$pkgdir/usr/share/pixmaps/farmnerds-hola.png"
+}

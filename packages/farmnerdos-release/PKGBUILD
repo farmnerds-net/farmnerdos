@@ -1,16 +1,17 @@
 # Maintainer: FarmNerdOS Team
 pkgname=farmnerdos-release
 pkgver=0.1
-pkgrel=2
+pkgrel=3
 pkgdesc="FarmNerdOS release identity files (os-release, lsb-release)"
 arch=('any')
-url="https://github.com/farmnerdos"
+url="https://github.com/farmnerds-net/farmnerdos"
 license=('MIT')
 provides=('lsb-release')
 conflicts=('lsb-release')
 install=farmnerdos-release.install
-source=('os-release' 'lsb-release' 'farmnerdos-release.hook')
-sha256sums=('SKIP' 'SKIP' 'SKIP')
+source=('os-release' 'lsb-release' 'farmnerdos-release.hook'
+        'logo.txt' 'farmnerdos-bashrc' 'fastfetch-config.jsonc')
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
 
 package() {
     # NOTE: /usr/lib/os-release is owned by Arch's 'filesystem' package, so we
@@ -21,4 +22,9 @@ package() {
     install -Dm644 lsb-release "$pkgdir/etc/lsb-release"
     install -Dm644 farmnerdos-release.hook \
         "$pkgdir/usr/share/libalpm/hooks/farmnerdos-release.hook"
+
+    # terminal branding: ANSI circuit-tree + fastfetch default + konsole rc
+    install -Dm644 logo.txt "$pkgdir/usr/share/farmnerdos/logo.txt"
+    install -Dm644 farmnerdos-bashrc "$pkgdir/etc/farmnerdos/bashrc"
+    install -Dm644 fastfetch-config.jsonc "$pkgdir/etc/fastfetch/config.jsonc"
 }

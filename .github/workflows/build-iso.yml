@@ -1,0 +1,42 @@
+name: Build ISO release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  build-iso:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:base-devel
+      # mkarchiso needs loop devices + privileged mounts
+      options: --privileged --user root
+    steps:
+      - name: Install build deps
+        run: pacman -Syu --noconfirm git archiso
+
+      - uses: actions/checkout@v4
+
+      - name: Build local package repo
+        run: |
+          useradd -m builder
+          chown -R builder:builder .
+          su builder -c ./scripts/build-packages.sh
+
+      - name: Build ISO
+        run: ./scripts/build-iso.sh
+
+      - name: Upload ISO to release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: out/*.iso
+          body: "FarmNerdOS Seedling — alpha. Dark mode, green thumb, CachyOS kernel."
+
+      - name: Upload ISO artifact (manual runs)
+        uses: actions/upload-artifact@v4
+        if: "!startsWith(github.ref, 'refs/tags/')"
+        with:
+          name: farmnerdos-iso
+          path: out/*.iso
