@@ -6,6 +6,11 @@ on:
     paths: ['packages/**']
   workflow_dispatch:
 
+# GITHUB_TOKEN is read-only by default; publishing (Pages push / release
+# upload) needs explicit write access
+permissions:
+  contents: write
+
 jobs:
   build-repo:
     runs-on: ubuntu-latest
