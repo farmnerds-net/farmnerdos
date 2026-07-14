@@ -21,6 +21,9 @@ CACHY_KEY="F3B607488DB35A47"
 # --- trust the CachyOS signing key on the build host -------------------------
 if ! pacman-key --list-keys "$CACHY_KEY" &>/dev/null; then
     echo "==> importing CachyOS signing key"
+    # CI containers ship populated pubkeys but no local master key — init is
+    # idempotent and required before lsign can sign anything
+    pacman-key --init
     pacman-key --recv-keys "$CACHY_KEY" --keyserver keyserver.ubuntu.com
     pacman-key --lsign-key "$CACHY_KEY"
 fi
