@@ -11,6 +11,9 @@ amd-ucode
 intel-ucode
 mkinitcpio
 mkinitcpio-archiso
+mkinitcpio-nfs-utils
+nbd
+pv
 sudo
 btrfs-progs
 dosfstools

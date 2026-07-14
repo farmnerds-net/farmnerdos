@@ -32,12 +32,31 @@ jobs:
       - name: Build ISO
         run: ./scripts/build-iso.sh
 
-      - name: Upload ISO to release
+      # GitHub release assets cap at 2GiB; the ISO (~3GB) ships via R2 instead.
+      - name: Upload ISO to Cloudflare R2
+        if: ${{ secrets.R2_ACCESS_KEY_ID != '' }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+        run: |
+          pacman -S --noconfirm aws-cli || pacman -S --noconfirm aws-cli-v2
+          cd out
+          sha256sum *.iso > "$(ls *.iso).sha256"
+          aws s3 cp . "s3://farmnerdos-releases/" --recursive \
+            --endpoint-url "https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com"
+
+      - name: Create release (checksum + download pointer)
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: out/*.iso
-          body: "FarmNerdOS Seedling — alpha. Dark mode, green thumb, CachyOS kernel."
+          files: out/*.sha256
+          body: |
+            FarmNerdOS Seedling — alpha. Dark mode, green thumb, CachyOS kernel.
+
+            The ISO exceeds GitHub's 2GiB asset limit and is hosted on
+            Cloudflare R2 — see the README for the current download link.
+            Verify with the attached .sha256.
 
       - name: Upload ISO artifact (manual runs)
         uses: actions/upload-artifact@v4
