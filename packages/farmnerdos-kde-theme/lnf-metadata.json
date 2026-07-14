@@ -1,0 +1,17 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "james.tiller@me.com",
+                "Name": "FarmNerdOS Team"
+            }
+        ],
+        "Description": "FarmNerdOS Seedling — dark soil, circuit-green glow",
+        "Id": "org.farmnerdos.seedling",
+        "License": "CC-BY-SA-4.0",
+        "Name": "FarmNerd Seedling",
+        "Version": "0.1",
+        "Website": "https://github.com/farmnerdos"
+    },
+    "X-Plasma-APIVersion": "2"
+}

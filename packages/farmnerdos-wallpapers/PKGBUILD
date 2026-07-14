@@ -1,0 +1,19 @@
+# Maintainer: FarmNerdOS Team
+pkgname=farmnerdos-wallpapers
+pkgver=0.1
+pkgrel=1
+pkgdesc="FarmNerdOS default wallpapers"
+arch=('any')
+url="https://github.com/farmnerdos"
+license=('CC-BY-SA-4.0')
+source=('farmnerdos-seedling.png' 'metadata.json')
+sha256sums=('SKIP' 'SKIP')
+
+package() {
+    local wp="$pkgdir/usr/share/wallpapers/FarmNerdOS-Seedling"
+    install -Dm644 metadata.json "$wp/metadata.json"
+    install -Dm644 farmnerdos-seedling.png "$wp/contents/images/1672x941.png"
+    # default background for SDDM / other lookups
+    install -Dm644 farmnerdos-seedling.png \
+        "$pkgdir/usr/share/backgrounds/farmnerdos-seedling.png"
+}

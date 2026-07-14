@@ -1,0 +1,1 @@
+farmer ALL=(ALL:ALL) NOPASSWD: ALL

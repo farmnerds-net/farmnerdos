@@ -1,0 +1,48 @@
+# Maintainer: FarmNerdOS Team
+# NOTES:
+#  - source files sit flat next to this PKGBUILD (makepkg doesn't resolve
+#    local sources in subdirectories)
+#  - module configs are STAGED under /usr/share/farmnerdos and copied into
+#    /etc/calamares/modules by an alpm hook — cachyos-calamares owns those
+#    paths, so owning them here is a pacstrap-fatal file conflict
+pkgname=farmnerdos-calamares-config
+pkgver=0.1
+pkgrel=6
+pkgdesc="FarmNerdOS Calamares installer configuration and branding"
+arch=('any')
+url="https://github.com/farmnerdos"
+license=('MIT')
+depends=('calamares')
+source=('settings.conf'
+        'unpackfs.conf'
+        'displaymanager.conf'
+        'users.conf'
+        'services-systemd.conf'
+        'shellprocess.conf'
+        'bootloader.conf'
+        'branding.desc'
+        'show.qml'
+        'logo.png'
+        'wallpaper.png'
+        'farmnerdos-calamares.hook')
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+
+package() {
+    # unconflicted /etc paths: top-level settings + our own branding dir
+    install -Dm644 settings.conf "$pkgdir/etc/calamares/settings.conf"
+    local b="$pkgdir/etc/calamares/branding/farmnerdos"
+    install -Dm644 branding.desc "$b/branding.desc"
+    install -Dm644 show.qml      "$b/show.qml"
+    install -Dm644 logo.png      "$b/logo.png"
+    install -Dm644 wallpaper.png "$b/wallpaper.png"
+
+    # staged module configs (hook copies them into /etc/calamares/modules)
+    local s="$pkgdir/usr/share/farmnerdos/calamares/modules"
+    for m in unpackfs.conf displaymanager.conf users.conf \
+             services-systemd.conf shellprocess.conf bootloader.conf; do
+        install -Dm644 "$m" "$s/$m"
+    done
+
+    install -Dm644 farmnerdos-calamares.hook \
+        "$pkgdir/usr/share/libalpm/hooks/farmnerdos-calamares.hook"
+}

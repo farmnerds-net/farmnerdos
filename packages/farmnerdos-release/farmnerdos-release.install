@@ -1,0 +1,12 @@
+post_install() {
+    cp /usr/share/farmnerdos/os-release /usr/lib/os-release
+}
+
+post_upgrade() {
+    post_install
+}
+
+post_remove() {
+    echo "==> FarmNerdOS identity removed; reinstall 'filesystem' to restore Arch os-release:"
+    echo "    pacman -S filesystem"
+}

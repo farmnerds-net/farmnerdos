@@ -1,0 +1,15 @@
+# cachyos-calamares owns /etc/calamares/modules/*.conf, so we must not.
+# Stage ours in /usr/share/farmnerdos/calamares and overwrite post-transaction,
+# re-firing whenever cachyos-calamares updates.
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = cachyos-calamares
+Target = calamares
+Target = farmnerdos-calamares-config
+
+[Action]
+Description = Applying FarmNerdOS Calamares module configs...
+When = PostTransaction
+Exec = /usr/bin/bash -c 'mkdir -p /etc/calamares/modules && cp -f /usr/share/farmnerdos/calamares/modules/*.conf /etc/calamares/modules/'

@@ -1,0 +1,12 @@
+{
+    "KPlugin": {
+        "Id": "FarmNerdOS-Seedling",
+        "License": "CC-BY-SA-4.0",
+        "Name": "FarmNerdOS Seedling",
+        "Authors": [
+            {
+                "Name": "FarmNerdOS Team"
+            }
+        ]
+    }
+}

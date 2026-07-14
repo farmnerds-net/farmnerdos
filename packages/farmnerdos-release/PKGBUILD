@@ -1,0 +1,24 @@
+# Maintainer: FarmNerdOS Team
+pkgname=farmnerdos-release
+pkgver=0.1
+pkgrel=2
+pkgdesc="FarmNerdOS release identity files (os-release, lsb-release)"
+arch=('any')
+url="https://github.com/farmnerdos"
+license=('MIT')
+provides=('lsb-release')
+conflicts=('lsb-release')
+install=farmnerdos-release.install
+source=('os-release' 'lsb-release' 'farmnerdos-release.hook')
+sha256sums=('SKIP' 'SKIP' 'SKIP')
+
+package() {
+    # NOTE: /usr/lib/os-release is owned by Arch's 'filesystem' package, so we
+    # must not own it too (file conflict aborts pacstrap). Instead we ship our
+    # identity to /usr/share/farmnerdos and overwrite via an alpm hook that
+    # re-fires whenever 'filesystem' is installed/upgraded.
+    install -Dm644 os-release "$pkgdir/usr/share/farmnerdos/os-release"
+    install -Dm644 lsb-release "$pkgdir/etc/lsb-release"
+    install -Dm644 farmnerdos-release.hook \
+        "$pkgdir/usr/share/libalpm/hooks/farmnerdos-release.hook"
+}

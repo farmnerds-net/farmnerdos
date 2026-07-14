@@ -1,0 +1,42 @@
+---
+componentName: farmnerdos
+
+welcomeStyleCalamares: true
+welcomeExpandingLogo: true
+
+windowExpanding: normal
+windowSize: 900px,600px
+windowPlacement: center
+
+sidebar: widget
+navigation: widget
+
+strings:
+    productName:         "FarmNerdOS"
+    shortProductName:    "FarmNerdOS"
+    version:             "0.1 Seedling (alpha)"
+    shortVersion:        "0.1"
+    versionedName:       "FarmNerdOS 0.1 Seedling"
+    shortVersionedName:  "FarmNerdOS 0.1"
+    bootloaderEntryName: "FarmNerdOS"
+    productUrl:          "https://github.com/farmnerdos"
+    supportUrl:          "https://github.com/farmnerdos/farmnerdos/issues"
+    releaseNotesUrl:     "https://github.com/farmnerdos"
+
+images:
+    productLogo:         "logo.png"
+    productIcon:         "logo.png"
+    productWallpaper:    "wallpaper.png"
+
+slideshow: "show.qml"
+slideshowAPI: 2
+
+style:
+   SidebarBackground:    "#0C120C"
+   SidebarText:          "#DCE8D8"
+   SidebarTextCurrent:   "#0C120C"
+   SidebarBackgroundCurrent: "#5CDB3C"
+   sidebarBackground:    "#0C120C"
+   sidebarText:          "#DCE8D8"
+   sidebarTextCurrent:   "#0C120C"
+   sidebarTextSelect:    "#5CDB3C"

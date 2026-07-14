@@ -1,0 +1,34 @@
+# Maintainer: FarmNerdOS Team
+# NOTE: sources sit flat next to this PKGBUILD (makepkg limitation); the
+# lnf-* files are the look-and-feel package's metadata.json and defaults.
+pkgname=farmnerdos-kde-theme
+pkgver=0.1
+pkgrel=3
+pkgdesc="FarmNerdOS KDE Plasma theme — dark soil with circuit-green accents"
+arch=('any')
+url="https://github.com/farmnerdos"
+license=('CC-BY-SA-4.0')
+depends=('plasma-desktop' 'breeze' 'farmnerdos-wallpapers')
+source=('FarmNerdSeedling.colors'
+        'FarmNerd.colorscheme'
+        'FarmNerd.profile'
+        'lnf-metadata.json'
+        'lnf-defaults')
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+
+package() {
+    # Plasma color scheme
+    install -Dm644 FarmNerdSeedling.colors \
+        "$pkgdir/usr/share/color-schemes/FarmNerdSeedling.colors"
+
+    # Konsole color scheme + profile
+    install -Dm644 FarmNerd.colorscheme \
+        "$pkgdir/usr/share/konsole/FarmNerd.colorscheme"
+    install -Dm644 FarmNerd.profile \
+        "$pkgdir/usr/share/konsole/FarmNerd.profile"
+
+    # Global look-and-feel package (sets colors, dark theme, wallpaper)
+    local lnf="$pkgdir/usr/share/plasma/look-and-feel/org.farmnerdos.seedling"
+    install -Dm644 lnf-metadata.json "$lnf/metadata.json"
+    install -Dm644 lnf-defaults      "$lnf/contents/defaults"
+}

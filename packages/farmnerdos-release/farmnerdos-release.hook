@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = filesystem
+Target = farmnerdos-release
+
+[Action]
+Description = Applying FarmNerdOS identity to os-release...
+When = PostTransaction
+Exec = /usr/bin/cp /usr/share/farmnerdos/os-release /usr/lib/os-release

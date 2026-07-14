@@ -1,0 +1,14 @@
+NAME="FarmNerdOS"
+PRETTY_NAME="FarmNerdOS 0.1 (Seedling)"
+ID=farmnerdos
+ID_LIKE=arch
+VERSION="0.1 (Seedling)"
+VERSION_ID=0.1
+VERSION_CODENAME=seedling
+BUILD_ID=rolling
+ANSI_COLOR="38;2;92;219;60"
+HOME_URL="https://github.com/farmnerdos"
+DOCUMENTATION_URL="https://github.com/farmnerdos"
+SUPPORT_URL="https://github.com/farmnerdos"
+BUG_REPORT_URL="https://github.com/farmnerdos/farmnerdos/issues"
+LOGO=farmnerdos

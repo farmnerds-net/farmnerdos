@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Launch the branded Calamares installer from the live session.
+# sudo -E (not pkexec): the live user has no password, so polkit's
+# auth_admin prompt would dead-end; -E preserves the Wayland/Qt env.
+set -euo pipefail
+exec sudo -E calamares -D6
