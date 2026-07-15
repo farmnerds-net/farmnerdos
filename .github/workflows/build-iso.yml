@@ -13,6 +13,12 @@ permissions:
 jobs:
   build-iso:
     runs-on: ubuntu-latest
+    env:
+      # secrets aren't allowed in step-level `if`; route through job env
+      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+      AWS_DEFAULT_REGION: auto
     container:
       image: archlinux:base-devel
       # mkarchiso needs loop devices + privileged mounts
@@ -34,17 +40,13 @@ jobs:
 
       # GitHub release assets cap at 2GiB; the ISO (~3GB) ships via R2 instead.
       - name: Upload ISO to Cloudflare R2
-        if: ${{ secrets.R2_ACCESS_KEY_ID != '' }}
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: auto
+        if: env.AWS_ACCESS_KEY_ID != ''
         run: |
           pacman -S --noconfirm aws-cli || pacman -S --noconfirm aws-cli-v2
           cd out
           sha256sum *.iso > "$(ls *.iso).sha256"
           aws s3 cp . "s3://farmnerdos-releases/" --recursive \
-            --endpoint-url "https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com"
+            --endpoint-url "https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com"
 
       - name: Create release (checksum + download pointer)
         uses: softprops/action-gh-release@v2
